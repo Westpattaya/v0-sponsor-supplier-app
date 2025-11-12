@@ -1,0 +1,92 @@
+import type { Event, Proposal } from "./types"
+
+export const mockEvents: Event[] = [
+  {
+    id: "1",
+    title: "Summer Music Festival",
+    description: "Looking for tech sponsors and logistics partners for our annual summer music festival.",
+    category: "Music",
+    budget: "$50K",
+    location: "Austin, TX",
+    date: "Jun 15",
+  },
+  {
+    id: "2",
+    title: "Tech Conference 2025",
+    description: "Major tech conference seeking sponsors for brand activations and booth setup.",
+    category: "Tech",
+    budget: "$75K",
+    location: "San Francisco, CA",
+    date: "Jul 22",
+  },
+  {
+    id: "3",
+    title: "Corporate Gala",
+    description: "Luxury corporate event looking for catering, decor, and entertainment.",
+    category: "Corporate",
+    budget: "$25K",
+    location: "New York, NY",
+    date: "Aug 10",
+  },
+  {
+    id: "4",
+    title: "Marathon & Sports Day",
+    description: "Annual marathon event looking for sports equipment and hydration sponsors.",
+    category: "Sports",
+    budget: "$30K",
+    location: "Boston, MA",
+    date: "Sep 5",
+  },
+  {
+    id: "5",
+    title: "Art Exhibition Opening",
+    description: "Contemporary art show seeking premium sponsors and media partners.",
+    category: "Art",
+    budget: "$15K",
+    location: "Los Angeles, CA",
+    date: "Aug 20",
+  },
+]
+
+export const mockProposals: Proposal[] = [
+  {
+    id: "1",
+    eventTitle: "Summer Music Festival",
+    supplierName: "AudioTech Solutions",
+    proposalText: "We offer premium sound system rental with full technical support team.",
+    amount: 5000,
+    status: "pending",
+  },
+  {
+    id: "2",
+    eventTitle: "Tech Conference 2025",
+    supplierName: "Stellar Events",
+    proposalText: "Complete booth design, setup, and breakdown services with experienced crew.",
+    amount: 8500,
+    status: "approved",
+  },
+  {
+    id: "3",
+    eventTitle: "Corporate Gala",
+    supplierName: "Gourmet Catering Co",
+    proposalText: "Multi-course dinner with premium bar service and professional waitstaff.",
+    amount: 12000,
+    status: "approved",
+  },
+  {
+    id: "4",
+    eventTitle: "Marathon & Sports Day",
+    supplierName: "HydroBoost Drinks",
+    proposalText: "Unlimited hydration stations with branded cups and staff support.",
+    amount: 3000,
+    status: "rejected",
+  },
+  {
+    id: "5",
+    eventTitle: "Tech Conference 2025",
+    supplierName: "Creative Marketing Agency",
+    proposalText: "Brand activation booth with interactive demo and social media integration.",
+    amount: 7500,
+    status: "pending",
+  },
+]
