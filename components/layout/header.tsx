@@ -33,10 +33,13 @@ export default function Header() {
             </button>
 
             {/* Register as Sponsor Button */}
-            <button className="hidden md:flex items-center gap-1.5 px-4 py-1.5 md:px-5 md:py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium">
+            <Link
+              href="/register-sponsor"
+              className="hidden md:flex items-center gap-1.5 px-4 py-1.5 md:px-5 md:py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium"
+            >
               <span>Register as Sponsor</span>
               <ChevronDown size={14} className="md:w-4 md:h-4" />
-            </button>
+            </Link>
 
             {/* User Profile */}
             <button className="p-1.5 md:p-2 rounded-md hover:bg-muted transition-colors">
