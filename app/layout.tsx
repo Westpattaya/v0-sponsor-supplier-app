@@ -1,12 +1,14 @@
-"use client"
-
 import type React from "react"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const geist = Geist({ subsets: ["latin"] })
+const geistMono = Geist_Mono({ subsets: ["latin"] })
+
+export const metadata = {
+  generator: 'v0.app'
+}
 
 export default function RootLayout({
   children,
@@ -19,14 +21,10 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#f5f8f7" />
       </head>
-      <body className={`font-sans antialiased bg-background text-foreground`}>
+      <body className={`${geist.className} antialiased bg-background text-foreground`}>
         {children}
         <Analytics />
       </body>
     </html>
   )
 }
-
-export const metadata = {
-      generator: 'v0.app'
-    };
