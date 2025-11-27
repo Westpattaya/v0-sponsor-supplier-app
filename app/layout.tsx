@@ -1,6 +1,7 @@
 import type React from "react"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { ReactQueryProvider } from "@/lib/react-query"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"] })
@@ -22,7 +23,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#f5f8f7" />
       </head>
       <body className={`${geist.className} antialiased bg-background text-foreground`}>
-        {children}
+        <ReactQueryProvider>
+          {children}
+        </ReactQueryProvider>
         <Analytics />
       </body>
     </html>

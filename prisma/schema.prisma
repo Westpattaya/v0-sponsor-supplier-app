@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organizer {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  events Event[]
+}
+
+model Event {
+  id            String   @id @default(cuid())
+  name          String
+  university    String
+  date          DateTime
+  audienceSize  String
+  description   String
+  shortDescription String?
+  photos        String?  // JSON array of photo URLs
+  needs         String   // JSON array: ["money", "product", "booth", "giveaway"]
+  categories    String   // JSON array of categories
+  location      String
+  venue         String?
+  isOnline      Boolean  @default(false)
+  budget        String?
+  
+  // Audience details
+  audienceAgeRange    String?
+  audienceInterests   String?
+  audienceOccupation String?
+  
+  // Sponsorship details
+  sponsorshipTiers   String? // JSON array of tier objects
+  benefits           String? // JSON array of benefits
+  timeline           String?
+  deliverables       String? // JSON array
+  
+  // Organizer info
+  organizerName      String
+  organizerRole      String?
+  organizerEmail     String
+  organizerPhone     String?
+  socialMediaLinks   String?
+  
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizer   Organizer @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  offers      SponsorshipOffer[]
+}
+
+model Sponsor {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String?
+  companyName  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  offers SponsorshipOffer[]
+}
+
+model SponsorshipOffer {
+  id                  String   @id @default(cuid())
+  eventId             String
+  sponsorId           String
+  offerType           String   // "money" | "product" | "booth" | "service"
+  amount              String?
+  items               String?  // For product offers
+  deliverablesRequested String  // JSON array
+  notes               String
+  status              String   @default("pending") // "pending" | "accepted" | "declined"
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  sponsor Sponsor @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([sponsorId])
+  @@index([status])
+}
