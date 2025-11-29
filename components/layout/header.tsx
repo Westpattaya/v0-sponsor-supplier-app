@@ -11,9 +11,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2.5 flex-shrink-0">
             <div className="h-7 w-7 md:h-8 md:w-8 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-xs md:text-sm">ES</span>
+              <span className="text-primary-foreground font-bold text-xs md:text-sm">SM</span>
             </div>
-            <span className="font-semibold text-base md:text-lg text-foreground">EventSponsor</span>
+            <span className="font-semibold text-base md:text-lg text-foreground">SponMatch</span>
           </Link>
 
           {/* Right Side Actions */}

@@ -38,7 +38,7 @@ export default function SponsorBenefits() {
         <div className="max-w-5xl mx-auto">
           {/* Section Title */}
           <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8 md:mb-12">
-            Why Sponsor on EventSponsor?
+            Why Sponsor on SponMatch?
           </h2>
 
           {/* Benefits Grid */}
