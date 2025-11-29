@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Filter, X } from "lucide-react"
+import { Filter, X, Search } from "lucide-react"
 
 interface AdvancedFiltersProps {
   onFilterChange: (filters: FilterState) => void
@@ -19,7 +19,21 @@ export interface FilterState {
 }
 
 const eventTypes = ["Music", "Tech", "Sports", "Corporate", "Art", "Conference", "Festival", "Competition", "Charity"]
-const universities = ["University of Texas at Austin", "Stanford University", "NYU Stern School of Business", "Boston University", "UCLA School of the Arts"]
+const universities = [
+  "Chulalongkorn University (จุฬาลงกรณ์มหาวิทยาลัย)",
+  "Thammasat University (มหาวิทยาลัยธรรมศาสตร์)",
+  "Kasetsart University (มหาวิทยาลัยเกษตรศาสตร์)",
+  "Mahidol University (มหาวิทยาลัยมหิดล)",
+  "Chiang Mai University (มหาวิทยาลัยเชียงใหม่)",
+  "Khon Kaen University (มหาวิทยาลัยขอนแก่น)",
+  "KMITL (สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง)",
+  "KMUTT (มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี)",
+  "Silpakorn University (มหาวิทยาลัยศิลปากร)",
+  "Srinakharinwirot University (มหาวิทยาลัยศรีนครินทรวิโรฒ)",
+  "King Mongkut's University of Technology North Bangkok (KMUTNB)",
+  "Burapha University (มหาวิทยาลัยบูรพา)",
+  "Prince of Songkla University (มหาวิทยาลัยสงขลานครินทร์)",
+]
 const audienceSizes = ["0-500", "500-1,000", "1,000-3,000", "3,000-5,000", "5,000+"]
 const sponsorshipTypes = ["money", "product", "booth", "giveaway"]
 
@@ -35,6 +49,8 @@ export default function AdvancedFilters({ onFilterChange }: AdvancedFiltersProps
     deliverables: [],
     eventMonth: "",
   })
+  const [eventTypeSearch, setEventTypeSearch] = useState("")
+  const [universitySearch, setUniversitySearch] = useState("")
 
   const toggleFilter = (category: keyof FilterState, value: string) => {
     setFilters((prev) => {
@@ -111,42 +127,84 @@ export default function AdvancedFilters({ onFilterChange }: AdvancedFiltersProps
             {/* Event Type */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-3">Event Type</label>
-              <div className="space-y-2">
-                {eventTypes.map((type) => (
-                  <label
-                    key={type}
-                    className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={filters.eventType.includes(type)}
-                      onChange={() => toggleFilter("eventType", type)}
-                      className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
-                    />
-                    <span className="text-sm text-foreground">{type}</span>
-                  </label>
-                ))}
+              <div className="relative mb-3">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                <input
+                  type="text"
+                  value={eventTypeSearch}
+                  onChange={(e) => setEventTypeSearch(e.target.value)}
+                  placeholder="Search event types..."
+                  className="w-full pl-9 pr-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {eventTypes
+                  .filter((type) =>
+                    eventTypeSearch === "" || type.toLowerCase().includes(eventTypeSearch.toLowerCase())
+                  )
+                  .map((type) => (
+                    <label
+                      key={type}
+                      className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={filters.eventType.includes(type)}
+                        onChange={() => toggleFilter("eventType", type)}
+                        className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
+                      />
+                      <span className="text-sm text-foreground">{type}</span>
+                    </label>
+                  ))}
+                {eventTypes.filter((type) =>
+                  eventTypeSearch === "" || type.toLowerCase().includes(eventTypeSearch.toLowerCase())
+                ).length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-2">No event types found</p>
+                )}
               </div>
             </div>
 
             {/* University */}
             <div>
               <label className="block text-sm font-semibold text-foreground mb-3">University</label>
-              <div className="space-y-2">
-                {universities.map((uni) => (
-                  <label
-                    key={uni}
-                    className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={filters.university.includes(uni)}
-                      onChange={() => toggleFilter("university", uni)}
-                      className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
-                    />
-                    <span className="text-sm text-foreground">{uni}</span>
-                  </label>
-                ))}
+              <div className="relative mb-3">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+                <input
+                  type="text"
+                  value={universitySearch}
+                  onChange={(e) => setUniversitySearch(e.target.value)}
+                  placeholder="Search universities..."
+                  className="w-full pl-9 pr-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {universities
+                  .filter((uni) =>
+                    universitySearch === "" ||
+                    uni.toLowerCase().includes(universitySearch.toLowerCase()) ||
+                    uni.includes(universitySearch)
+                  )
+                  .map((uni) => (
+                    <label
+                      key={uni}
+                      className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={filters.university.includes(uni)}
+                        onChange={() => toggleFilter("university", uni)}
+                        className="w-4 h-4 text-primary border-border rounded focus:ring-primary"
+                      />
+                      <span className="text-sm text-foreground">{uni}</span>
+                    </label>
+                  ))}
+                {universities.filter((uni) =>
+                  universitySearch === "" ||
+                  uni.toLowerCase().includes(universitySearch.toLowerCase()) ||
+                  uni.includes(universitySearch)
+                ).length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-2">No universities found</p>
+                )}
               </div>
             </div>
 

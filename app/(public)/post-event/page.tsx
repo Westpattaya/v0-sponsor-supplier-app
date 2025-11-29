@@ -85,11 +85,19 @@ export default function PostEventPage() {
   const organizationTypes = ["Student Team", "Startup", "Company", "Community", "Other"]
 
   const universities = [
-    "University of Texas at Austin",
-    "Stanford University",
-    "NYU Stern School of Business",
-    "Boston University",
-    "UCLA School of the Arts",
+    "Chulalongkorn University (จุฬาลงกรณ์มหาวิทยาลัย)",
+    "Thammasat University (มหาวิทยาลัยธรรมศาสตร์)",
+    "Kasetsart University (มหาวิทยาลัยเกษตรศาสตร์)",
+    "Mahidol University (มหาวิทยาลัยมหิดล)",
+    "Chiang Mai University (มหาวิทยาลัยเชียงใหม่)",
+    "Khon Kaen University (มหาวิทยาลัยขอนแก่น)",
+    "KMITL (สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง)",
+    "KMUTT (มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี)",
+    "Silpakorn University (มหาวิทยาลัยศิลปากร)",
+    "Srinakharinwirot University (มหาวิทยาลัยศรีนครินทรวิโรฒ)",
+    "King Mongkut's University of Technology North Bangkok (KMUTNB)",
+    "Burapha University (มหาวิทยาลัยบูรพา)",
+    "Prince of Songkla University (มหาวิทยาลัยสงขลานครินทร์)",
     "Other",
   ]
 
