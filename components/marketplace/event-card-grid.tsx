@@ -1,11 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import { MapPin, Calendar, DollarSign } from "lucide-react"
+import { MapPin, Calendar, DollarSign, Users, GraduationCap } from "lucide-react"
 import type { Event } from "@/lib/types"
 
 interface EventCardGridProps {
   event: Event
+}
+
+const supportLabels: Record<string, string> = {
+  money: "Cash",
+  product: "Product",
+  booth: "Booth",
+  giveaway: "Giveaway",
 }
 
 export default function EventCardGrid({ event }: EventCardGridProps) {
@@ -26,9 +33,15 @@ export default function EventCardGrid({ event }: EventCardGridProps) {
 
       {/* Content */}
       <div className="p-4 space-y-3">
-        <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+        <div>
+          <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors mb-1">
           {event.title}
         </h3>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <GraduationCap size={12} />
+            <span className="line-clamp-1">{event.university}</span>
+          </div>
+        </div>
         <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
 
         {/* Details */}
@@ -37,14 +50,33 @@ export default function EventCardGrid({ event }: EventCardGridProps) {
             <MapPin size={14} />
             <span>{event.location}</span>
           </div>
-          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Calendar size={14} />
               <span>{event.date}</span>
             </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Users size={14} />
+            <span>{event.audienceSize} attendees</span>
+          </div>
+          <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-1 text-sm font-semibold text-foreground">
               <DollarSign size={14} />
               <span>{event.budget}</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {event.supportNeeded.slice(0, 2).map((support) => (
+                <span
+                  key={support}
+                  className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full"
+                >
+                  {supportLabels[support]}
+                </span>
+              ))}
+              {event.supportNeeded.length > 2 && (
+                <span className="px-2 py-0.5 text-xs bg-muted text-muted-foreground rounded-full">
+                  +{event.supportNeeded.length - 2}
+                </span>
+              )}
             </div>
           </div>
         </div>

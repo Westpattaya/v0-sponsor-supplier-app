@@ -7,6 +7,22 @@ export interface Event {
   location: string
   date: string
   image?: string
+  // Marketplace enhancements
+  university: string
+  audienceSize: string
+  supportNeeded: ("money" | "product" | "booth" | "giveaway")[]
+  organizerName: string
+  organizerRole: string
+  organizerAvatar?: string
+  expectedAudience?: string
+  sponsorshipTiers?: {
+    name: string
+    amount: string
+    benefits: string[]
+  }[]
+  benefits?: string[]
+  timeline?: string
+  deliverables?: string[]
 }
 
 export interface Proposal {
@@ -25,6 +41,7 @@ export interface User {
   avatar?: string
 }
 
+// Dashboard types (from main branch)
 export interface Sponsorship {
   id: string
   eventName: string
@@ -64,4 +81,18 @@ export interface Deadline {
   dueDate: string
   type: "deliverable" | "payment" | "review"
   daysUntil: number
+}
+
+// Marketplace types (from next-jue branch)
+export interface SponsorshipOffer {
+  id: string
+  eventId: string
+  sponsorId: string
+  offerType: "money" | "product" | "booth" | "service"
+  amount?: string
+  items?: string
+  deliverables: string[]
+  notes: string
+  status: "pending" | "accepted" | "declined"
+  createdAt: string
 }

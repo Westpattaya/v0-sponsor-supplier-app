@@ -26,11 +26,41 @@ export default function Header() {
               Event Board
             </Link>
 
+            {/* Organizer Dashboard */}
+            <Link
+              href="/organizer/dashboard"
+              className="hidden md:block text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              Dashboard
+            </Link>
+
             {/* Notifications */}
             <button className="relative p-1.5 md:p-2 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">
               <Bell size={18} className="md:w-5 md:h-5" />
               <span className="absolute top-0.5 right-0.5 h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-primary"></span>
             </button>
+
+            {/* Login/Signup */}
+            <Link
+              href="/login"
+              className="hidden md:block text-sm font-medium text-foreground hover:text-primary transition-colors"
+            >
+              Login
+            </Link>
+            <Link
+              href="/signup"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border bg-background text-foreground hover:bg-muted transition-colors text-sm font-medium"
+            >
+              Sign Up
+            </Link>
+
+            {/* Post Event Button */}
+            <Link
+              href="/post-event"
+              className="hidden md:flex items-center gap-1.5 px-4 py-1.5 md:px-5 md:py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-medium"
+            >
+              <span>Post Event</span>
+            </Link>
 
             {/* Register as Sponsor Button */}
             <Link
