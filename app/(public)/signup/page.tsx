@@ -45,10 +45,16 @@ export default function SignupPage() {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true)
       // TODO: Implement actual signup logic
+      // Store user role in localStorage for now
+      localStorage.setItem("userRole", formData.userType)
       setTimeout(() => {
         setIsLoading(false)
-        // For now, just redirect to dashboard
-        window.location.href = "/organizer/dashboard"
+        // Redirect based on user type
+        if (formData.userType === "sponsor") {
+          window.location.href = "/"
+        } else {
+          window.location.href = "/organizer/dashboard"
+        }
       }, 1000)
     }
   }

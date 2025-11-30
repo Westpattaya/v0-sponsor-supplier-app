@@ -1,21 +1,37 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import Header from "@/components/layout/header"
-import { CheckCircle2, X, Clock, Plus, Trash2 } from "lucide-react"
+import EventCardGrid from "@/components/marketplace/event-card-grid"
+import EventFilterBar from "@/components/marketplace/event-filter-bar"
+import { type FilterState } from "@/components/marketplace/advanced-filters"
+import { transformDbEventToEvent } from "@/lib/event-utils"
+import { mockEvents } from "@/lib/mock-data"
+import { Plus, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 export default function OrganizerDashboard() {
-  const [activeTab, setActiveTab] = useState<"events" | "offers">("offers")
+  const [activeTab, setActiveTab] = useState<"events" | "marketplace">("marketplace")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [advancedFilters, setAdvancedFilters] = useState<FilterState>({
+    eventType: [],
+    university: [],
+    audienceSize: [],
+    sponsorshipType: [],
+    budgetMin: "",
+    budgetMax: "",
+    deliverables: [],
+    eventMonth: "",
+  })
   const queryClient = useQueryClient()
 
-  // Fetch offers (in production, filter by organizer's events)
-  const { data: offers, isLoading: offersLoading } = useQuery({
-    queryKey: ["offers"],
+  // Fetch all events for marketplace
+  const { data: marketplaceEventsData, isLoading: marketplaceLoading } = useQuery({
+    queryKey: ["events", "marketplace"],
     queryFn: async () => {
-      const response = await fetch("/api/offers")
-      if (!response.ok) throw new Error("Failed to fetch offers")
+      const response = await fetch("/api/events?limit=100")
+      if (!response.ok) throw new Error("Failed to fetch events")
       return response.json()
     },
   })
@@ -27,21 +43,6 @@ export default function OrganizerDashboard() {
       const response = await fetch("/api/events")
       if (!response.ok) throw new Error("Failed to fetch events")
       return response.json()
-    },
-  })
-
-  const updateOfferMutation = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const response = await fetch(`/api/offers/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      })
-      if (!response.ok) throw new Error("Failed to update offer")
-      return response.json()
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["offers"] })
     },
   })
 
@@ -64,21 +65,56 @@ export default function OrganizerDashboard() {
     }
   }
 
-  const handleAcceptOffer = (offerId: string) => {
-    if (confirm("Accept this sponsorship offer? This will create an Active Sponsorship.")) {
-      updateOfferMutation.mutate({ id: offerId, status: "accepted" })
-    }
-  }
+  // Transform database events and combine with mock events
+  const dbEvents = marketplaceEventsData?.events?.map(transformDbEventToEvent) || []
+  const allMarketplaceEvents = [...dbEvents, ...mockEvents]
 
-  const handleDeclineOffer = (offerId: string) => {
-    if (confirm("Decline this sponsorship offer?")) {
-      updateOfferMutation.mutate({ id: offerId, status: "declined" })
-    }
-  }
+  // Filter events based on search and filters
+  const filteredEvents = useMemo(() => {
+    return allMarketplaceEvents.filter((event) => {
+      // Search filter
+      const matchesSearch =
+        searchQuery === "" ||
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.university.toLowerCase().includes(searchQuery.toLowerCase())
 
-  const pendingOffers = offers?.filter((o: any) => o.status === "pending") || []
-  const acceptedOffers = offers?.filter((o: any) => o.status === "accepted") || []
-  const declinedOffers = offers?.filter((o: any) => o.status === "declined") || []
+      // Event type filter
+      const matchesEventType =
+        advancedFilters.eventType.length === 0 || advancedFilters.eventType.includes(event.category)
+
+      // University filter
+      const matchesUniversity =
+        advancedFilters.university.length === 0 || advancedFilters.university.includes(event.university)
+
+      // Audience size filter
+      const matchesAudienceSize =
+        advancedFilters.audienceSize.length === 0 ||
+        advancedFilters.audienceSize.some((size) => {
+          const [min, max] = size.split("-").map((s) => s.replace(/,/g, "").replace("+", ""))
+          const eventSize = parseInt(event.audienceSize.replace(/,/g, "").split("-")[0])
+          if (max) {
+            return eventSize >= parseInt(min) && eventSize <= parseInt(max)
+          } else {
+            return eventSize >= parseInt(min)
+          }
+        })
+
+      // Sponsorship type filter
+      const matchesSponsorshipType =
+        advancedFilters.sponsorshipType.length === 0 ||
+        advancedFilters.sponsorshipType.some((type) => event.supportNeeded.includes(type as any))
+
+      return (
+        matchesSearch &&
+        matchesEventType &&
+        matchesUniversity &&
+        matchesAudienceSize &&
+        matchesSponsorshipType
+      )
+    })
+  }, [allMarketplaceEvents, searchQuery, advancedFilters])
 
   return (
     <div className="min-h-screen bg-background">
@@ -96,14 +132,14 @@ export default function OrganizerDashboard() {
             {/* Tabs */}
             <div className="flex gap-4 mb-6 border-b border-border">
               <button
-                onClick={() => setActiveTab("offers")}
+                onClick={() => setActiveTab("marketplace")}
                 className={`px-4 py-2 font-medium transition-colors ${
-                  activeTab === "offers"
+                  activeTab === "marketplace"
                     ? "text-primary border-b-2 border-primary"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Offers ({pendingOffers.length})
+                Marketplace ({allMarketplaceEvents.length})
               </button>
               <button
                 onClick={() => setActiveTab("events")}
@@ -117,121 +153,37 @@ export default function OrganizerDashboard() {
               </button>
             </div>
 
-            {/* Offers Tab */}
-            {activeTab === "offers" && (
-              <div className="space-y-6">
-                {/* Pending Offers */}
-                <div>
-                  <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                    <Clock size={20} className="text-primary" />
-                    Pending Offers ({pendingOffers.length})
-                  </h2>
-                  {offersLoading ? (
-                    <div className="text-center py-12 text-muted-foreground">Loading offers...</div>
-                  ) : pendingOffers.length === 0 ? (
-                    <div className="bg-card border border-border rounded-xl p-8 text-center">
-                      <p className="text-muted-foreground">No pending offers</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {pendingOffers.map((offer: any) => (
-                        <div
-                          key={offer.id}
-                          className="bg-card border border-border rounded-xl p-6 hover:shadow-md transition-shadow"
-                        >
-                          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                            <div className="flex-1">
-                              <h3 className="text-lg font-semibold text-foreground mb-2">
-                                {offer.event?.name || "Event"}
-                              </h3>
-                              <div className="space-y-2 text-sm">
-                                <div>
-                                  <span className="text-muted-foreground">From: </span>
-                                  <span className="font-medium text-foreground">
-                                    {offer.sponsor?.name}
-                                    {offer.sponsor?.companyName && ` (${offer.sponsor.companyName})`}
-                                  </span>
-                                </div>
-                                <div>
-                                  <span className="text-muted-foreground">Offer Type: </span>
-                                  <span className="font-medium text-foreground capitalize">{offer.offerType}</span>
-                                </div>
-                                {offer.amount && (
-                                  <div>
-                                    <span className="text-muted-foreground">Amount: </span>
-                                    <span className="font-medium text-foreground">{offer.amount}</span>
-                                  </div>
-                                )}
-                                {offer.items && (
-                                  <div>
-                                    <span className="text-muted-foreground">Items: </span>
-                                    <span className="font-medium text-foreground">{offer.items}</span>
-                                  </div>
-                                )}
-                                {offer.notes && (
-                                  <div className="pt-2">
-                                    <span className="text-muted-foreground">Notes: </span>
-                                    <p className="text-foreground mt-1">{offer.notes}</p>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => handleAcceptOffer(offer.id)}
-                                disabled={updateOfferMutation.isPending}
-                                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2"
-                              >
-                                <CheckCircle2 size={16} />
-                                Accept
-                              </button>
-                              <button
-                                onClick={() => handleDeclineOffer(offer.id)}
-                                disabled={updateOfferMutation.isPending}
-                                className="px-4 py-2 border border-destructive text-destructive rounded-lg font-medium hover:bg-destructive/10 transition-colors disabled:opacity-50 flex items-center gap-2"
-                              >
-                                <X size={16} />
-                                Decline
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+            {/* Marketplace Tab */}
+            {activeTab === "marketplace" && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold text-foreground mb-2">All Events</h2>
+                  <p className="text-sm text-muted-foreground">Browse all events posted by organizers</p>
                 </div>
 
-                {/* Accepted Offers */}
-                {acceptedOffers.length > 0 && (
-                  <div>
-                    <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-                      <CheckCircle2 size={20} className="text-green-500" />
-                      Accepted Offers ({acceptedOffers.length})
-                    </h2>
-                    <div className="space-y-4">
-                      {acceptedOffers.map((offer: any) => (
-                        <div
-                          key={offer.id}
-                          className="bg-card border border-green-500/20 rounded-xl p-6"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h3 className="text-lg font-semibold text-foreground mb-2">
-                                {offer.event?.name || "Event"}
-                              </h3>
-                              <p className="text-sm text-muted-foreground">
-                                From: {offer.sponsor?.name}
-                                {offer.sponsor?.companyName && ` (${offer.sponsor.companyName})`}
-                              </p>
-                            </div>
-                            <span className="px-3 py-1 bg-green-500/10 text-green-600 dark:text-green-400 rounded-full text-sm font-medium">
-                              Accepted
-                            </span>
-                          </div>
-                        </div>
+                {/* Event Filter Bar */}
+                <div className="mb-6">
+                  <EventFilterBar
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                  />
+                </div>
+
+
+                {/* Events Grid */}
+                {marketplaceLoading ? (
+                  <div className="text-center py-12 text-muted-foreground">Loading events...</div>
+                ) : filteredEvents.length === 0 ? (
+                  <div className="bg-card border border-border rounded-xl p-8 text-center">
+                    <p className="text-muted-foreground mb-2">No events found</p>
+                    <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                      {filteredEvents.map((event) => (
+                        <EventCardGrid key={event.id} event={event} />
                       ))}
                     </div>
-                  </div>
                 )}
               </div>
             )}

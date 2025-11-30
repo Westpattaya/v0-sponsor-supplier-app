@@ -16,6 +16,7 @@ model Organizer {
   name         String
   email        String   @unique
   passwordHash String?
+  role         String   @default("organizer") // "organizer" | "sponsor"
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -70,10 +71,41 @@ model Sponsor {
   email        String   @unique
   passwordHash String?
   companyName  String?
+  role         String   @default("sponsor") // "sponsor" | "organizer"
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  offers SponsorshipOffer[]
+  offers           SponsorshipOffer[]
+  sponsorPostings SponsorPosting[]
+}
+
+model SponsorPosting {
+  id            String   @id @default(cuid())
+  title         String   // Sponsorship package title
+  description   String
+  shortDescription String?
+  companyName   String
+  sponsorType   String   // Type of sponsorship offered
+  budget        String?  // Budget range for sponsorship
+  deliverables  String   // JSON array of deliverables offered
+  benefits      String?  // JSON array of benefits
+  targetAudience String? // Target audience description
+  targetUniversities String? // JSON array of target universities
+  categories    String   // JSON array of event categories they sponsor
+  contactEmail  String
+  contactPhone  String?
+  website       String?
+  socialMediaLinks String?
+  photos        String?  // JSON array of photo URLs
+  
+  createdBy     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sponsor       Sponsor  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([createdBy])
+  @@index([sponsorType])
 }
 
 model SponsorshipOffer {

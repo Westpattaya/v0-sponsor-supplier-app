@@ -24,7 +24,7 @@ export default function RootLayout({
       </head>
       <body className={`${geist.className} antialiased bg-background text-foreground`}>
         <ReactQueryProvider>
-          {children}
+        {children}
         </ReactQueryProvider>
         <Analytics />
       </body>

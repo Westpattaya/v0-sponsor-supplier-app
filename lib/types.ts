@@ -96,3 +96,27 @@ export interface SponsorshipOffer {
   status: "pending" | "accepted" | "declined"
   createdAt: string
 }
+
+// Sponsor Posting types
+export interface SponsorPosting {
+  id: string
+  title: string
+  description: string
+  shortDescription?: string
+  companyName: string
+  sponsorType: string
+  budget?: string
+  deliverables: string[]
+  benefits?: string[]
+  targetAudience?: string
+  targetUniversities?: string[]
+  categories: string[]
+  contactEmail: string
+  contactPhone?: string
+  website?: string
+  socialMediaLinks?: string
+  photos?: string[]
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
