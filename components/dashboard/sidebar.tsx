@@ -4,23 +4,25 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
-  Handshake,
-  Clock,
-  CheckSquare,
-  Calendar,
-  Search,
-  Settings,
+  Briefcase,
+  GitBranch,
+  FileText,
+  ClipboardCheck,
+  FolderOpen,
+  Inbox,
+  FileCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Active Sponsorships", href: "/dashboard/sponsorships", icon: Handshake },
-  { name: "Pending Offers", href: "/dashboard/offers", icon: Clock },
-  { name: "Tasks & Deliverables", href: "/dashboard/tasks", icon: CheckSquare },
-  { name: "Deadlines", href: "/dashboard/deadlines", icon: Calendar },
-  { name: "Browse Events", href: "/find-sponsor", icon: Search },
-  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "Opportunities", href: "/dashboard/opportunities", icon: Briefcase },
+  { name: "Sponsorship pipeline", href: "/dashboard/pipeline", icon: GitBranch },
+  { name: "Deal/contract page", href: "/dashboard/deals", icon: FileText },
+  { name: "Deliverables tracking", href: "/dashboard/deliverables", icon: ClipboardCheck },
+  { name: "File library", href: "/dashboard/files", icon: FolderOpen },
+  { name: "Inbox", href: "/dashboard/notifications", icon: Inbox },
+  { name: "Final report", href: "/dashboard/final-report", icon: FileCheck },
 ]
 
 export default function DashboardSidebar() {

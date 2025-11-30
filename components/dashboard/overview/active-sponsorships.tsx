@@ -40,7 +40,7 @@ export default function ActiveSponsorships() {
                     : "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
                 }`}
               >
-                {sponsorship.status}
+                {sponsorship.status === "active" ? "Active" : "Pending"}
               </span>
             </div>
 

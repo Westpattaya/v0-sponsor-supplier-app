@@ -59,7 +59,7 @@ export default function TasksDeliverables() {
                     task.priority
                   )}`}
                 >
-                  {task.priority}
+                  {task.priority === "high" ? "High" : task.priority === "medium" ? "Medium" : "Low"}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground truncate">
