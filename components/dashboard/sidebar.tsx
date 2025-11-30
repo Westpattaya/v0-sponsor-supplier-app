@@ -30,7 +30,7 @@ export default function DashboardSidebar() {
     <aside className="fixed left-0 top-0 h-screen w-64 border-r border-border bg-card flex flex-col">
       {/* Logo */}
       <div className="h-16 border-b border-border flex items-center px-6">
-        <Link href="/dashboard" className="flex items-center space-x-2.5">
+        <Link href="/" className="flex items-center space-x-2.5">
           <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">SM</span>
           </div>
