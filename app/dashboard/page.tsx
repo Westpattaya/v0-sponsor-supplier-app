@@ -10,7 +10,7 @@ import SuggestedEvents from "@/components/dashboard/overview/suggested-events"
 export default function DashboardPage() {
   return (
     <DashboardLayout>
-      <div className="h-full overflow-y-auto bg-background">
+      <div className="bg-background">
         <div className="p-6 md:p-8 space-y-8">
           {/* Header */}
           <div>

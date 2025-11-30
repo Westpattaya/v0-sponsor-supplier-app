@@ -42,21 +42,21 @@ export default function Home() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex items-center justify-between mb-6 md:mb-8">
               <div>
-                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">Events Seeking Sponsors</h2>
-                <p className="text-sm md:text-base text-muted-foreground mt-1">Student events looking for sponsorship opportunities</p>
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">งานที่กำลังหาสปอนเซอร์</h2>
+                <p className="text-sm md:text-base text-muted-foreground mt-1">งานของนักศึกษาที่กำลังมองหาสปอนเซอร์</p>
               </div>
               <Link
                 href="/find-sponsors"
                 className="hidden md:flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
-                <span>View All</span>
+                <span>ดูทั้งหมด</span>
                 <ArrowRight size={16} />
               </Link>
             </div>
 
             {/* Events Grid */}
             {isLoading ? (
-              <div className="text-center py-12 text-muted-foreground">Loading events...</div>
+              <div className="text-center py-12 text-muted-foreground">กำลังโหลดงาน...</div>
             ) : featuredEvents.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {featuredEvents.map((event) => (
@@ -65,7 +65,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="text-center py-12 text-muted-foreground">
-                <p>No events available yet. Be the first to post an event!</p>
+                <p>ยังไม่มีงานในขณะนี้ เป็นคนแรกที่โพสต์งาน!</p>
               </div>
             )}
 
@@ -75,7 +75,7 @@ export default function Home() {
                 href="/find-sponsors"
                 className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
               >
-                <span>View All Events</span>
+                <span>ดูงานทั้งหมด</span>
                 <ArrowRight size={16} />
               </Link>
             </div>

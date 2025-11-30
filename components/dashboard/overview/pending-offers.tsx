@@ -40,16 +40,29 @@ export default function PendingOffers() {
                 {offer.organization}
               </p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-sm font-semibold text-foreground">
-                  ${offer.amount.toLocaleString()}
-                </span>
+                {offer.amount ? (
+                  <span className="text-sm font-semibold text-foreground">
+                    ${offer.amount.toLocaleString()}
+                  </span>
+                ) : offer.offerType ? (
+                  <span className="text-sm font-semibold text-foreground">
+                    {offer.offerType === "money" ? "Cash" : 
+                     offer.offerType === "product" ? "Product" :
+                     offer.offerType === "booth" ? "Booth" :
+                     offer.offerType === "service" ? "Service" : offer.offerType}
+                  </span>
+                ) : (
+                  <span className="text-sm font-semibold text-foreground">
+                    Not specified
+                  </span>
+                )}
                 <span className="text-xs text-muted-foreground">
                   • {offer.type === "sent" ? "You sent" : "Received"}
                 </span>
               </div>
             </div>
             <span className="ml-4 px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400">
-              {offer.status}
+              {offer.status === "pending" ? "Pending" : offer.status}
             </span>
           </div>
         ))}
